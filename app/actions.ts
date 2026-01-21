@@ -1,12 +1,22 @@
-'use server' // WAJIB ADA DI BARIS PERTAMA
+'use server'
 
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 
-export async function addTransaction(prevState: any, formData: FormData) {
+// Fungsi pembantu agar tidak menulis ulang kode yang sama
+async function getSupabase() {
   const cookieStore = await cookies();
-  const supabase = createClient(Promise.resolve(cookieStore) as any);
+  // Kita buat objek yang mensimulasikan format yang diharapkan Supabase
+  return createClient({
+    getAll: () => cookieStore.getAll(),
+    set: (name, value, options) => cookieStore.set(name, value, options),
+    remove: (name, options) => cookieStore.set(name, "", options),
+  } as any);
+}
+
+export async function addTransaction(prevState: any, formData: FormData) {
+  const supabase = await getSupabase();
 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "Sesi telah berakhir" };
@@ -43,19 +53,19 @@ export async function addTransaction(prevState: any, formData: FormData) {
 }
 
 export async function deleteTransaction(id: string) {
-  const cookieStore = await cookies();
-  const supabase = createClient(Promise.resolve(cookieStore) as any);
-
+  const supabase = await getSupabase();
   const { error } = await supabase.from("transactions").delete().eq("id", id);
-  if (error) throw new Error(error.message);
+  
+  if (error) {
+    console.error("Delete error:", error.message);
+    return;
+  }
 
   revalidatePath("/");
 }
 
 export async function addCathegory(prevState: any, formData: FormData) {
-  const cookieStore = await cookies();
-  const supabase = createClient(Promise.resolve(cookieStore) as any);
-
+  const supabase = await getSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "Sesi telah berakhir" };
 
@@ -75,10 +85,9 @@ export async function addCathegory(prevState: any, formData: FormData) {
 }
 
 export async function deleteCathegory(id: string) {
-  const cookieStore = await cookies();
-  const supabase = createClient(Promise.resolve(cookieStore) as any);
-
+  const supabase = await getSupabase();
   const { error } = await supabase.from("cathegories").delete().eq("id", id);
+  
   if (error) throw new Error(error.message);
 
   revalidatePath("/");
