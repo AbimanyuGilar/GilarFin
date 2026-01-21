@@ -1,12 +1,19 @@
 'use server'
 
-import { cookies } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 
+/**
+ * Fungsi pembantu untuk inisialisasi Supabase.
+ * Sekarang createClient() sudah async dan mengurus cookies sendiri,
+ * jadi kita tinggal panggil tanpa argumen apapun.
+ */
+async function getSupabase() {
+  return await createClient();
+}
+
 export async function login(formData: FormData) {
-  const cookieStore = await cookies();
-  const supabase = createClient(Promise.resolve(cookieStore) as any);
+  const supabase = await getSupabase();
 
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
@@ -17,40 +24,38 @@ export async function login(formData: FormData) {
   });
 
   if (error) {
-    redirect('/login?message=Gagal masuk: ' + error.message);
+    return redirect('/login?message=Gagal masuk: ' + error.message);
   }
 
-  redirect('/');
+  return redirect('/');
 }
 
 export async function signup(formData: FormData) {
-  const cookieStore = await cookies();
-  const supabase = createClient(Promise.resolve(cookieStore) as any);
+  const supabase = await getSupabase();
 
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
-  const origin = (await cookies()).get('origin')?.value || ''; // Optional: untuk email confirmation
-
+  
+  // Karena ini Server Action, kita bisa panggil createClient() langsung
   const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      emailRedirectTo: `${origin}/auth/callback`,
+      // Sesuaikan origin jika Anda menggunakan redirect konfirmasi email
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback`,
     },
   });
 
   if (error) {
-    redirect('/login?message=Gagal mendaftar: ' + error.message);
+    return redirect('/login?message=Gagal mendaftar: ' + error.message);
   }
 
-  // Biasanya setelah signup sukses, arahkan ke halaman info atau langsung login
-  redirect('/login?message=Cek email Anda untuk konfirmasi pendaftaran');
+  return redirect('/login?message=Cek email Anda untuk konfirmasi pendaftaran');
 }
 
 export async function signOut() {
-  const cookieStore = await cookies();
-  const supabase = createClient(Promise.resolve(cookieStore) as any);
+  const supabase = await getSupabase();
   
   await supabase.auth.signOut();
-  redirect('/login');
+  return redirect('/login');
 }
