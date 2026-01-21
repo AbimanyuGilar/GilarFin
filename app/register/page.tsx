@@ -12,7 +12,7 @@ function RegisterForm() {
   return (
     <form action={signup} className="flex flex-col gap-5 relative z-10">
       <div className="space-y-1">
-        <label className="text-[10px] font-bold text-slate-500 ml-4 uppercase tracking-widest">Email</label>
+        <label className="text-[10px] font-bold text-slate-500 ml-4 uppercase tracking-widest">Email Address</label>
         <input 
           name="email" 
           type="email" 
@@ -52,18 +52,22 @@ export default function RegisterPage() {
       <div className="w-full max-w-md bg-slate-900/50 border border-slate-800 p-8 md:p-12 rounded-[2.5rem] shadow-2xl backdrop-blur-xl relative overflow-hidden">
         <div className="absolute top-0 left-0 w-32 h-32 bg-blue-600/10 blur-[60px] -mr-16 -mt-16" />
         
+        {/* Logo Image Branding */}
         <div className="flex flex-col items-center gap-3 mb-10 relative z-10">
-          <div className="w-14 h-14 bg-gradient-to-tr from-blue-600 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <svg viewBox="0 0 24 24" fill="none" className="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 3C12 3 13 8 18 10C13 11 12 16 12 16C12 16 11 11 6 10C11 8 12 3 12 3Z" fill="currentColor"/>
-            </svg>
+          <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg shadow-blue-500/20 border border-slate-700 bg-slate-950">
+            <img 
+              src="/GilarFin.png" 
+              alt="GilarFin Logo" 
+              className="w-full h-full object-cover"
+            />
           </div>
           <h1 className="text-2xl font-bold tracking-tighter text-white uppercase italic">
             Gilar<span className="text-blue-500">Fin</span>
           </h1>
+          <p className="text-[10px] text-slate-500 uppercase tracking-[0.3em] font-bold">Create New Account</p>
         </div>
 
-        <Suspense fallback={<div className="text-center text-slate-500 text-xs">Loading form...</div>}>
+        <Suspense fallback={<div className="text-center text-slate-600 text-xs">Memuat Form...</div>}>
           <RegisterForm />
         </Suspense>
 
