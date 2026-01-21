@@ -42,7 +42,7 @@ export async function signup(formData: FormData) {
     password,
     options: {
       // Sesuaikan origin jika Anda menggunakan redirect konfirmasi email
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback`,
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
     },
   });
 
