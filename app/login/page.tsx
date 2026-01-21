@@ -1,41 +1,70 @@
-import { login } from "../auth/actions";
+'use client'
 
-// Tambahkan async di sini
-export default async function LoginPage({ 
-  searchParams 
-}: { 
-  searchParams: Promise<{ error?: string, message?: string }> 
-}) {
-  // Unwrapping searchParams (Wajib di Next.js 16)
-  const { error, message } = await searchParams;
+import { login } from "@/app/auth/actions";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+
+export default function LoginPage() {
+  const searchParams = useSearchParams();
+  const message = searchParams.get("message");
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
-      <form action={login} className="w-full max-w-sm space-y-4 rounded-2xl border bg-white p-8 shadow-sm">
-        <h1 className="text-2xl font-bold text-center text-blue-600">MASUK</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#020617] p-4 text-slate-200">
+      <div className="w-full max-w-md bg-slate-900/50 border border-slate-800 p-8 md:p-12 rounded-[2.5rem] shadow-2xl backdrop-blur-xl relative overflow-hidden">
+        {/* Neon Glow Decor */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-purple-600/10 blur-[60px] -mr-16 -mt-16" />
         
-        {/* Sekarang pakai variabel yang sudah di-await */}
-        {error && <p className="text-red-500 text-sm text-center font-medium bg-red-50 p-2 rounded-lg border border-red-100">{error}</p>}
-        {message && <p className="text-blue-500 text-sm text-center font-medium bg-blue-50 p-2 rounded-lg border border-blue-100">{message}</p>}
-        
-        <div className="space-y-1">
-          <label className="text-xs font-bold text-gray-400">EMAIL</label>
-          <input name="email" type="email" placeholder="email@contoh.com" required className="w-full rounded-lg border p-2 outline-none focus:ring-2 focus:ring-blue-500" />
+        {/* Logo Branding */}
+        <div className="flex flex-col items-center gap-3 mb-10 relative z-10">
+          <div className="w-14 h-14 bg-gradient-to-tr from-purple-600 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/20">
+            <svg viewBox="0 0 24 24" fill="none" className="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 3C12 3 13 8 18 10C13 11 12 16 12 16C12 16 11 11 6 10C11 8 12 3 12 3Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold tracking-tighter text-white uppercase italic">
+            Gilar<span className="text-purple-500">Fin</span>
+          </h1>
+          <p className="text-[10px] text-slate-500 uppercase tracking-[0.3em] font-bold">Finance Management</p>
         </div>
 
-        <div className="space-y-1">
-          <label className="text-xs font-bold text-gray-400">PASSWORD</label>
-          <input name="password" type="password" placeholder="••••••••" required className="w-full rounded-lg border p-2 outline-none focus:ring-2 focus:ring-blue-500" />
-        </div>
-        
-        <button className="w-full rounded-lg bg-blue-600 py-3 font-bold text-white hover:bg-blue-700 transition">
-          LOGIN
-        </button>
-        
-        <p className="text-center text-sm text-gray-500">
-          Belum punya akun? <a href="/register" className="text-blue-600 font-bold hover:underline">Daftar</a>
+        <form action={login} className="flex flex-col gap-5 relative z-10">
+          <div className="space-y-1">
+            <label className="text-[10px] font-bold text-slate-500 ml-4 uppercase tracking-widest">Email</label>
+            <input 
+              name="email" 
+              type="email" 
+              placeholder="name@email.com" 
+              required 
+              className="w-full p-4 bg-slate-950/50 border border-slate-800 rounded-2xl text-white outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500/30 transition-all placeholder:text-slate-700" 
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-[10px] font-bold text-slate-500 ml-4 uppercase tracking-widest">Password</label>
+            <input 
+              name="password" 
+              type="password" 
+              placeholder="••••••••" 
+              required 
+              className="w-full p-4 bg-slate-950/50 border border-slate-800 rounded-2xl text-white outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500/30 transition-all placeholder:text-slate-700" 
+            />
+          </div>
+
+          {message && (
+            <div className="text-center text-xs font-bold text-rose-400 bg-rose-500/10 p-3 rounded-xl border border-rose-500/20 animate-pulse">
+              {message}
+            </div>
+          )}
+
+          <button className="w-full py-4 bg-purple-600 hover:bg-purple-500 rounded-2xl font-bold text-white shadow-lg shadow-purple-500/25 transition-all active:scale-[0.98] mt-2">
+            Masuk Sekarang
+          </button>
+        </form>
+
+        <p className="text-center text-xs text-slate-500 mt-8 relative z-10">
+          Belum punya akun? <Link href="/register" className="text-purple-400 hover:text-purple-300 font-bold transition-colors">Daftar di sini</Link>
         </p>
-      </form>
+      </div>
     </div>
   );
 }
