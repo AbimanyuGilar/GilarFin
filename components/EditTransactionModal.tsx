@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState, useEffect } from "react";
-import { addTransaction } from "@/app/actions";
+import { addTransaction } from "@/app/actions"; // Impor akan aman karena 'use server' di actions.ts
 import { useSearchParams, useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
 
@@ -9,7 +9,7 @@ function TombolUpdate() {
   const { pending } = useFormStatus();
   return (
     <button disabled={pending} className="w-full py-4 bg-purple-600 hover:bg-purple-500 rounded-2xl font-bold text-white shadow-lg transition-all flex items-center justify-center gap-2">
-      {pending ? <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" /> : "Perbarui Data"}
+      {pending ? <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" /> : "Simpan Perubahan"}
     </button>
   );
 }
@@ -21,7 +21,9 @@ export default function EditTransactionModal({ cathegories }: { cathegories: any
   const [state, formAction] = useActionState(addTransaction, null);
 
   useEffect(() => {
-    if (state?.success) router.push('/');
+    if (state?.success) {
+      router.push('/');
+    }
   }, [state, router]);
 
   if (!isOpen) return null;
@@ -72,6 +74,7 @@ export default function EditTransactionModal({ cathegories }: { cathegories: any
             <div className="pt-2">
               <TombolUpdate />
             </div>
+            {state?.error && <p className="text-rose-500 text-[10px] font-bold text-center">{state.error}</p>}
           </form>
         </div>
       </div>

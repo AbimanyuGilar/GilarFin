@@ -1,12 +1,11 @@
+'use server' // WAJIB ADA DI BARIS PERTAMA
+
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 
 export async function addTransaction(prevState: any, formData: FormData) {
   const cookieStore = await cookies();
-  
-  // PERBAIKAN: Bungkus cookieStore ke dalam Promise.resolve() 
-  // agar cocok dengan tipe data yang diminta createClient
   const supabase = createClient(Promise.resolve(cookieStore) as any);
 
   const { data: { user } } = await supabase.auth.getUser();
@@ -17,7 +16,7 @@ export async function addTransaction(prevState: any, formData: FormData) {
   const cathegory_id = formData.get("cathegory_id");
   const description = formData.get("description");
   const date = formData.get("date");
-  const id = formData.get("id"); // Untuk edit
+  const id = formData.get("id");
 
   const payload = {
     user_id: user.id,
