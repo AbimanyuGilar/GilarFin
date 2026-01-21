@@ -7,7 +7,7 @@ import EditTransactionModal from "@/components/EditTransactionModal";
 import UserHeader from "@/components/UserHeader";
 
 export default async function Page() {
-  // Panggil createClient yang baru (sudah async di utils/supabase/server.ts)
+  // Inisialisasi Supabase Client (Async - Next.js 16)
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
@@ -49,10 +49,13 @@ export default async function Page() {
         {/* HEADER BRANDING */}
         <div className="flex justify-between items-center px-2">
           <div className="flex items-center gap-2 md:gap-3">
-            <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-tr from-purple-600 to-blue-500 rounded-lg flex items-center justify-center shadow-lg shadow-purple-500/20 relative overflow-hidden">
-               <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 3C12 3 13 8 18 10C13 11 12 16 12 16C12 16 11 11 6 10C11 8 12 3 12 3Z" fill="currentColor"/>
-               </svg>
+            {/* Logo Image GilarFin.png */}
+            <div className="w-10 h-10 rounded-lg overflow-hidden shadow-lg shadow-purple-500/20 border border-slate-800 bg-slate-900">
+              <img 
+                src="/GilarFin.png" 
+                alt="GilarFin Logo" 
+                className="w-full h-full object-cover"
+              />
             </div>
             <h1 className="text-lg md:text-xl font-bold tracking-tight text-white uppercase italic">
               Gilar<span className="text-purple-500">Fin</span>
@@ -62,7 +65,7 @@ export default async function Page() {
           <UserHeader username={username} />
         </div>
 
-        {/* SUMMARY CARD (SUDAH DIKEMBALIKAN) */}
+        {/* SUMMARY CARD */}
         <header className="relative p-6 md:p-12 rounded-[2.5rem] bg-slate-900/50 border border-slate-800 overflow-hidden shadow-2xl backdrop-blur-xl">
           <div className="absolute top-0 right-0 w-64 h-64 bg-purple-600/10 blur-[100px] -mr-32 -mt-32" />
           
